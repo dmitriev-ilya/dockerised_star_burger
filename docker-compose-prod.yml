@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+
+  db:
+    image: postgres
+    restart: always
+    env_file: .env
+    volumes:
+      - postgres_db:/var/lib/postgresql/data
+    expose:
+      - 5432
+
+  frontend:
+    build: ./nodejs
+    command: ./node_modules/.bin/parcel watch bundles-src/index.js --dist-dir bundles --public-url="./"
+    restart: always
+    volumes: 
+      - static:/app/bundles
+
+  backend:
+    build: ./django
+    depends_on:
+      - db
+      - frontend
+    command: bash -c "python3 manage.py migrate && python3 manage.py collectstatic --noinput && gunicorn -w 3 -b 0.0.0.0:8000 star_burger.wsgi"
+    restart: always
+    env_file: .env
+    expose:
+      - 8000
+    volumes: 
+      - static:/app/staticfiles
+      - media:/app/media
+
+  nginx:
+    image: nginx
+    depends_on:
+      - backend
+    restart: always
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/production:/etc/nginx/conf.d
+      - static:/app/staticfiles
+      - media:/app/media
+
+volumes:
+  static:
+  media:
+  postgres_db:
