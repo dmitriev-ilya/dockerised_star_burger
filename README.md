@@ -71,11 +71,11 @@ POSTGRES_DB=<название базы данных, например star_burge
 Запустите сборку Docker-образа командой:
 
 ```
-docker-compose -f docker-compose.yml build
+docker-compose -f docker-compose-prod.yml build
 ```
 Запустите Docker-контейнеры:
 ```
-docker-compose -f docker-compose.yml up -d
+docker-compose -f docker-compose-prod.yml up -d
 ```
 
 ## Автоматизация деплоя
