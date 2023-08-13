@@ -33,13 +33,14 @@ services:
       - media:/app/media
 
   nginx:
-    build: ./nginx
+    image: nginx
     depends_on:
       - backend
     restart: always
     ports:
       - "80:80"
     volumes:
+      - ./nginx/development:/etc/nginx/conf.d
       - static:/app/staticfiles
       - media:/app/media
 
