@@ -1,7 +1,4 @@
 import os
-import subprocess
-
-import dj_database_url
 
 from environs import Env
 
@@ -51,9 +48,7 @@ MIDDLEWARE = [
 ROLLBAR = {
     'access_token': env('ROLLBAR_TOKEN', 'token_unknown'),
     'environment': env('ROLLBAR_ENVIRONMENT', 'development'),
-    'code_version': subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=BASE_DIR).decode('ascii').strip(),
-    'root': BASE_DIR,
-    'branch': 'master'
+    'root': BASE_DIR
 }
 
 ROOT_URLCONF = 'star_burger.urls'
@@ -97,11 +92,13 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
 DATABASES = {
-    'default': dj_database_url.config(
-        default=env('DB_URL'),
-        conn_max_age=600,
-        conn_health_checks=True,
-    )
+    'default': {
+        'ENGINE': "django.db.backends.postgresql",
+        'HOST': 'db',
+        'NAME': env.str("POSTGRES_DB"),
+        'USER': env.str("POSTGRES_USER"),
+        'PASSWORD': env.str("POSTGRES_PASSWORD"),
+    }
 }
 
 AUTH_PASSWORD_VALIDATORS = [

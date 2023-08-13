@@ -58,7 +58,7 @@ class RestaurantAdmin(admin.ModelAdmin):
 
     def save_model(self, request, obj, form, change):
         create_address(obj.address)
-        super(OrderAdmin, self).save_model(request, obj, form, change)
+        super(RestaurantAdmin, self).save_model(request, obj, form, change)
 
 
 @admin.register(Product)
